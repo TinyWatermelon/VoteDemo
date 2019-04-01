@@ -2,13 +2,13 @@
 a demostration of voting system based on hyperledger
 
 
-| 节点        | 组织   |  端口  |
-| --------   | -----:  | :----:  |
-| orderer     | \ |   7050     |
-| peer0        |  org1   |   7051   |
-| peer1        |    org1    |  8051  |
-| peer0     | org2 |   9051     |
-| peer1        |   org2   |   10051   |
+| 节点        | 组织   |  端口  |  通道  |
+| --------   | -----:  | :----:  | :----:  |
+| orderer     | \ |   7050     |   mychannel     |
+| peer0        |  org1   |   7051   |   mychannel     |
+| peer1        |    org1    |  8051  |   mychannel     |
+| peer0     | org2 |   9051     |   mychannel     |
+| peer1        |   org2   |   10051   |   mychannel     |
 
 
 
