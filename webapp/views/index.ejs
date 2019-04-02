@@ -3,13 +3,13 @@
 
 <head>
     <title>
-        admin page
+        <%= title %>
     </title>
-    <!-- ◊Ó–¬∞Ê±æµƒ Bootstrap ∫À–ƒ CSS Œƒº˛ -->
+    <!-- ÊúÄÊñ∞ÁâàÊú¨ÁöÑ Bootstrap Ê†∏ÂøÉ CSS Êñá‰ª∂ -->
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
 
-    <!-- ø…—°µƒ Bootstrap ÷˜Ã‚Œƒº˛£®“ª∞„≤ª”√“˝»Î£© -->
+    <!-- ÂèØÈÄâÁöÑ Bootstrap ‰∏ªÈ¢òÊñá‰ª∂Ôºà‰∏ÄËà¨‰∏çÁî®ÂºïÂÖ•Ôºâ -->
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
         crossorigin="anonymous">
 		<style> 
@@ -20,137 +20,47 @@
 		.LLL{
 		padding-left:6%;
 		}
-		/**table tr :nth-child(odd)
-{
-background:gray;
-}**/
 		</style>
 </head>
 
 <body>
-    <form action="/saveUser" method="get">
-        <div class= "ljy"><h1>Vote Demo</h1>
- <h4>This a demostration of voting system based on fabric</h4>		</div>
-   
+    <form action="/voteUser" method="get">
+        <div class ="ljy"><h1>Vote Demo</h1>
+		<h4>This a demostration of voting system based on fabric</h4>
+		</div>
+        
         <table class="table">
             <thead>
                 <th>#</th>
-                <th>–’√˚</th>
-                <th>∆± ˝</th>
+                <th>ÂßìÂêç</th>
+                <th>Á•®Êï∞</th>
             </thead>
             <tbody>
-                
+                <% 
+                    jsonResult = JSON.parse(result)
+                    for(var i=0; i<jsonResult.length; i++) { 
+                %>
                 <tr>
-                    <td>1 </td>
-                    <td>(§ƒ°‰¶ÿ`)§ƒ</td>
-                    <td>1</td>
+                    <td><%= i+1 %> </td>
+                    <td><%= jsonResult[i].username %></td>
+                    <td><%= jsonResult[i].votenum %></td>
                 </tr>
-                
-                <tr>
-                    <td>2 </td>
-                    <td>HyperWatermelon</td>
-                    <td>1</td>
-                </tr>
-                
-                <tr>
-                    <td>3 </td>
-                    <td>This is a pretty long sentence for testing this system</td>
-                    <td>1</td>
-                </tr>
-                
-                <tr>
-                    <td>4 </td>
-                    <td>ahaha</td>
-                    <td>2</td>
-                </tr>
-                
-                <tr>
-                    <td>5 </td>
-                    <td>alexander</td>
-                    <td>1</td>
-                </tr>
-                
-                <tr>
-                    <td>6 </td>
-                    <td>helloworld</td>
-                    <td>1</td>
-                </tr>
-                
-                <tr>
-                    <td>7 </td>
-                    <td>li</td>
-                    <td>4</td>
-                </tr>
-                
-                <tr>
-                    <td>8 </td>
-                    <td>liu</td>
-                    <td>5</td>
-                </tr>
-                
-                <tr>
-                    <td>9 </td>
-                    <td>ljy</td>
-                    <td>1</td>
-                </tr>
-                
-                <tr>
-                    <td>10 </td>
-                    <td>louis</td>
-                    <td>4</td>
-                </tr>
-                
-                <tr>
-                    <td>11 </td>
-                    <td>luo</td>
-                    <td>2</td>
-                </tr>
-                
-                <tr>
-                    <td>12 </td>
-                    <td>this is it</td>
-                    <td>1</td>
-                </tr>
-                
-                <tr>
-                    <td>13 </td>
-                    <td>≤ª”√Õ∏¬∂∏ˆ»À–≈œ¢</td>
-                    <td>1</td>
-                </tr>
-                
-                <tr>
-                    <td>14 </td>
-                    <td>–°¡ı</td>
-                    <td>2</td>
-                </tr>
-                
-                <tr>
-                    <td>15 </td>
-                    <td>Õ¯’æ≤ª∞≤»´</td>
-                    <td>1</td>
-                </tr>
-                
-                <tr>
-                    <td>16 </td>
-                    <td>∞¢»±</td>
-                    <td>3</td>
-                </tr>
-                
+                <% } %>
             </tbody>
         </table>
         
-        <div class = "LLL">√˚◊÷£∫
+        <div class = "LLL">ÂêçÂ≠óÔºö
         <input type="text" name="username" id="username" />
-        <button type="button" onclick="saveUserVote()">Ã·Ωª</button> </div>
+        <button type="button" onclick="saveUserVote()">Êèê‰∫§</button> </div>
     </form>
 
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-    <!-- ◊Ó–¬µƒ Bootstrap ∫À–ƒ JavaScript Œƒº˛ -->
+    <!-- ÊúÄÊñ∞ÁöÑ Bootstrap Ê†∏ÂøÉ JavaScript Êñá‰ª∂ -->
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script>
         function saveUserVote () {
             var username = $("#username").val()
-            $.get ("/saveUser?username="+username,function(data){
+            $.get ("/voteUser?username="+username,function(data){
                 alert("submit success!\n"+ data)
                 location.reload()
             })
