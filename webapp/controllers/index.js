@@ -81,9 +81,7 @@ module.exports = {
 		console.error(`Failed to evaluate transaction: ${error}`);
 	    }
 
-        await ctx.render('index', {
-            result
-        })
+        ctx.body = result
     },
 	async getUserVoteById ( ctx ) {
 		const queryBody = ctx.request.query;
@@ -116,9 +114,7 @@ module.exports = {
 		console.error(`Failed to evaluate transaction: ${error}`);
 	    }
 
-        await ctx.render('index', {
-            result
-        })
+        ctx.body = result
     },
 
     async voteUser (ctx) {
@@ -154,9 +150,7 @@ module.exports = {
         	console.error(`Failed to submit transaction: ${error}`);
     	}
 		
-        await ctx.render('index', {
-            result
-        })
+        ctx.body = result
     }
 
 }
