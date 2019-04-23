@@ -49,7 +49,9 @@
         
         <div class = "LLL">名字：
         <input type="text" name="username" id="username" />
-        <button type="button" onclick="saveUserVote()">提交</button> </div>
+        <button type="button" onclick="saveUserVote()">提交</button>
+	<button type="button" onclick="getUserVoteById()">查询</button>
+	</div>
     </form>
 
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
@@ -58,9 +60,15 @@
         function saveUserVote () {
             var username = $("#username").val()
             $.get ("/voteUser?username="+username,function(data){
-                alert("submit success!\n"+ data)
+                alert("success!")
                 location.reload()
-            })
+            },"text")
+        }
+        function getUserVoteById(){
+            var username = $("#username").val()
+            $.get ("/getUserVoteById?username="+username,function(data){
+                alert(data)
+            },"text")
         }
     </script>
 </body>
