@@ -9,7 +9,7 @@ const ccp = JSON.parse(ccpJSON);
 module.exports = {
 
     async indexPage ( ctx ) {
-        const title = 'demo page'
+        const title = 'main page'
         let result = ''
 		try {
 
@@ -21,7 +21,7 @@ module.exports = {
 			// Check to see if we've already enrolled the user.
 			const userExists = await wallet.exists('louis');
 			if (!userExists) {
-				console.log('An identity for the user "user1" does not exist in the wallet');
+				console.log('An identity for the user "louis" does not exist in the wallet');
 				console.log('Run the registerUser.js application before retrying');
 				return;
 			}
@@ -62,7 +62,7 @@ module.exports = {
 
 			const userExists = await wallet.exists('louis');
 			if (!userExists) {
-				console.log('An identity for the user "user1" does not exist in the wallet');
+				console.log('An identity for the user "louis" does not exist in the wallet');
 				console.log('Run the registerUser.js application before retrying');
 				return;
 			}
@@ -95,7 +95,7 @@ module.exports = {
 
 			const userExists = await wallet.exists('louis');
 			if (!userExists) {
-				console.log('An identity for the user "user1" does not exist in the wallet');
+				console.log('An identity for the user "louis" does not exist in the wallet');
 				console.log('Run the registerUser.js application before retrying');
 				return;
 			}
@@ -118,39 +118,69 @@ module.exports = {
     },
 
     async voteUser (ctx) {
-        const queryBody = ctx.request.query;
+	const queryBody = ctx.request.query;
+
         const username = queryBody.username;
+
         console.log(`username.....${username}`)
+
 	
+
 		try {
+
 			const walletPath = path.join(process.cwd(), 'wallet');
+
 			const wallet = new FileSystemWallet(walletPath);
+
 			console.log(`Wallet path: ${walletPath}`);
 
+
+
 			const userExists = await wallet.exists('louis');
+
 			if (!userExists) {
+
 				console.log('An identity for the user "user1" does not exist in the wallet');
+
 				console.log('Run the registerUser.js application before retrying');
+
 				return;
+
 			}
 
+
+
 			const gateway = new Gateway();
+
 			await gateway.connect(ccp, { wallet, identity: 'louis', discovery: { enabled: false } });
+
+
 
 			const network = await gateway.getNetwork('mychannel');
 
+
+
 			const contract = network.getContract('mycc');
 
+
+
 			result = await contract.submitTransaction('voteUser', username);
+
 			console.log('Transaction has been submitted');
+
+
 
 			await gateway.disconnect();
 
-    	} catch (error) {
-        	console.error(`Failed to submit transaction: ${error}`);
-    	}
-		
-        ctx.body = result
-    }
 
+
+    	} catch (error) {
+
+        	console.error(`Failed to submit transaction: ${error}`);
+
+    	}
+
+		
+        ctx.body = result   
+    }
 }
