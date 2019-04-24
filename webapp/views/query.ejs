@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <title>
+
+        <%= title %>
+
+    </title>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+
+        crossorigin="anonymous">
+
+
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+
+        crossorigin="anonymous">
+
+		<style> 
+
+		.header{
+
+		text-align:center;
+
+		background-image: linear-gradient(to right, #1b1314, #ccc 20%,#ddd 50%,#ccc,#1b1314);
+		height:80px
+
+		}
+
+		.backBtn{
+                margin-top: 25px;
+		padding-left:48%;
+
+		}
+		.queryInput{
+		margin-top: 10px;
+		padding-left:60%;
+
+		}
+		.informationDock{
+
+		padding-left:5%;
+		margin-top: 10px;
+		border-bottom: 1px solid #101010;
+
+		}
+		
+
+		</style>
+
+</head>
+
+
+
+<body>
+
+    <form action="/voteUser" method="get">
+
+        <div class ="header"><h1>Query page</h1>
+
+		<h4>This is the page to show query result.</h4>
+
+		</div>
+
+        
+
+        <div class="informationDock">
+			<h4>输入所需查询用户名，点击查询可查询</h4>
+			<h4>用户名不存在时，返回空</h4>
+		</div>
+
+        <div class = "queryInput">名字：
+
+			<input type="text" name="username" id="username" />
+
+			<button type="button" onclick="getUserVoteById()">查询</button>
+
+		</div>
+
+        <div class = "backBtn">
+
+        <button type="button" onclick="goBack()">Back</button> </div>
+
+    </form>
+
+
+
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script>
+		function getUserVoteById () {
+			var username = $("#username").val()
+			if(username==null||username==undefined||username==""){
+                		alert("error: blank input.")
+			}
+
+                else{
+			$.get ("/getUserVoteById?username="+username,function(data){
+                                alert(data)
+                        },"text")
+                }
+        }
+
+        function goBack () {
+
+            window.location.href = "/"
+
+        }
+
+    </script>
+
+</body>
+
+
+
+</html>
+

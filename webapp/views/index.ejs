@@ -11,19 +11,24 @@
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
         crossorigin="anonymous">
 		<style> 
-		.ljy{
+		.header{
 		text-align:center;
 		background-image: linear-gradient(to right, #1b1314, #ccc 20%,#ddd 50%,#ccc,#1b1314);
+		height:80px;
 		}
-		.LLL{
-		padding-left:6%;
+		.blankPanel{
+                border-top: 2px solid #909090;
+                }
+		.btnPanel{
+		margin-top: 20px;
+		padding-left: 70%;
 		}
 		</style>
 </head>
 
 <body>
-    <form action="/voteUser" method="get">
-        <div class ="ljy"><h1>Vote Demo</h1>
+    <form action="/voteUser" method="post">
+        <div class ="header"><h1>Vote Demo</h1>
 		<h4>This a demostration of voting system based on fabric</h4>
 		</div>
         
@@ -46,29 +51,22 @@
                 <% } %>
             </tbody>
         </table>
-        
-        <div class = "LLL">名字：
-        <input type="text" name="username" id="username" />
-        <button type="button" onclick="saveUserVote()">提交</button>
-	<button type="button" onclick="getUserVoteById()">查询</button>
-	</div>
     </form>
+	<div class = "blankPanel"/>
+	<div class = "btnPanel" >
+                <button type="button" onclick="gotoVotePage()">投票</button>
+                <button type="button" onclick="gotoQueryPage()">查询</button>
+      	</div>
 
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script>
-        function saveUserVote () {
-            var username = $("#username").val()
-            $.get ("/voteUser?username="+username,function(data){
-                alert("success!")
-                location.reload()
-            },"text")
+	function gotoVotePage(){
+            window.location.href = "/votePage"
         }
-        function getUserVoteById(){
-            var username = $("#username").val()
-            $.get ("/getUserVoteById?username="+username,function(data){
-                alert(data)
-            },"text")
+	function gotoQueryPage(){
+            window.location.href = "/queryPage"
         }
     </script>
 </body>
