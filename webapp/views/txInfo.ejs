@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>
+
+        <%= title %>
+
+    </title>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+
+        crossorigin="anonymous">
+
+
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+
+        crossorigin="anonymous">
+
+		<style> 
+		.header{
+		text-align:center;
+		background-image: linear-gradient(to right, #1b1314, #ccc 20%,#ddd 50%,#ccc,#1b1314);
+		height:80px;
+		}
+		.blankPanel{
+        border-top: 2px solid #909090;
+        }
+		.heightPanel{
+		margin-top: 5px;
+		padding-left: 10%;
+		border-bottom: 1px solid #808080;
+		}
+		.btnPanel{
+		margin-top: 20px;
+		padding-left: 47%;
+		}
+
+		</style>
+
+</head>
+
+
+
+<body>
+
+    <form >
+        <div class="header"><h1>Transaction page</h1>
+			<h4>Information of Transaction</h4>
+		</div >
+        <table class="table">
+            <thead>
+                <th>Key</th>
+				<th>Value</th>
+            </thead>
+            <tbody id="tbMain">  
+				<% 
+						tx = JSON.parse(txresult);
+						block = JSON.parse(blockresult);
+				%>
+				<tr>
+					<td>Validation Code</td>
+					<td><a href="https://github.com/hyperledger/fabric/blob/v1.0.0/protos/peer/transaction.proto#L125"><%=tx.validationCode%></a></td>
+				</tr>
+				<tr>
+					<td>Block height</td>
+					<td><a href="/blockInfoPage?blockId=<%=block.header.number%>"><%=block.header.number%></a></td>
+				</tr>
+				<tr>
+					<td>Time</td>
+					<td><%=tx.transactionEnvelope.payload.header.channel_header.timestamp.slice(0,10) + " " + tx.transactionEnvelope.payload.header.channel_header.timestamp.slice(11,19)%></td>
+				</tr>
+				<tr>
+					<td>Transaction ID</td>
+					<td><%=tx.transactionEnvelope.payload.header.channel_header.tx_id%></td>
+				</tr>
+				<tr>
+					<td>Creator identity</td>
+					<td><%=tx.transactionEnvelope.payload.header.signature_header.creator.Mspid%></td>
+				</tr>
+				<tr>
+					<td>Signature</td>
+					<td><%=tx.transactionEnvelope.payload.header.signature_header.creator.IdBytes%></td>
+				</tr>
+				<tr>
+					<td>Chaincode ID</td>
+					<td><%=tx.transactionEnvelope.payload.data.actions[0].payload.action.proposal_response_payload.extension.chaincode_id.name%></td>
+				</tr>
+				<tr>
+					<td>Chaincode version</td>
+					<td><%=tx.transactionEnvelope.payload.data.actions[0].payload.action.proposal_response_payload.extension.chaincode_id.version%></td>
+				</tr>
+				<tr>
+					<td>Proposal hash</td>
+					<td><%=tx.transactionEnvelope.payload.data.actions[0].payload.action.proposal_response_payload.proposal_hash%></td>
+				</tr>
+            </tbody>
+        </table>
+		<table class="table">
+			<thead>
+                <th>Reads</th>
+            </thead>
+			<tbody id="tbReads">
+				<%
+					for(var i = 0;i < tx.transactionEnvelope.payload.data.actions[0].payload.action.proposal_response_payload.extension.results.ns_rwset[1].rwset.reads.length; i++ ){
+				%>
+				<tr>
+					<td>Key[<%=i%>]</td>
+					<td><font color="blue"><%=tx.transactionEnvelope.payload.data.actions[0].payload.action.proposal_response_payload.extension.results.ns_rwset[1].rwset.reads[i].key%></font></td>
+				</tr>
+				<%}%>
+			</tbody>
+		</table>
+		<table class="table">
+			<thead>
+                <th>Writes</th>
+            </thead>
+			<tbody id="tbWrites">
+				<%
+					for(var i = 0;i < tx.transactionEnvelope.payload.data.actions[0].payload.action.proposal_response_payload.extension.results.ns_rwset[1].rwset.writes.length; i++ ){
+				%>
+				<tr>
+					<td>Key[<%=i%>]</td>
+					<td><font color="blue"><%=tx.transactionEnvelope.payload.data.actions[0].payload.action.proposal_response_payload.extension.results.ns_rwset[1].rwset.writes[i].key%></font></td>
+				</tr>
+				<tr>
+					<td>Is delete[<%=i%>]</td>
+					<td><font color="red"><%=tx.transactionEnvelope.payload.data.actions[0].payload.action.proposal_response_payload.extension.results.ns_rwset[1].rwset.writes[i].is_delete%></font></td>
+				</tr>
+				<tr>
+					<td>Value[<%=i%>]</td>
+					<td><font color="green"><%=tx.transactionEnvelope.payload.data.actions[0].payload.action.proposal_response_payload.extension.results.ns_rwset[1].rwset.writes[i].value%></font></td>
+				</tr>
+				<%}%>
+			</tbody>
+		</table>
+		
+    </form>
+	
+	<div class = "btnPanel">
+		<button type="button" onclick="goBack()">Back</button> 
+	</div>
+
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+		function goBack () {
+
+            window.location.href = "/historyPage"
+
+        }
+    </script>
+</body>
+
+</html>
+

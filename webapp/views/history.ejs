@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <title>
+
+        <%= title %>
+
+    </title>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+
+        crossorigin="anonymous">
+
+
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+
+        crossorigin="anonymous">
+
+		<style> 
+				.header{
+				text-align:center;
+				background-image: linear-gradient(to right, #1b1314, #ccc 20%,#ddd 50%,#ccc,#1b1314);
+				height:80px;
+				}
+				.blankPanel{
+						border-top: 2px solid #909090;
+						}
+				.btnPanel{
+				margin-top: 20px;
+				padding-left: 70%;
+				}
+				.tabs {
+                margin: 20px auto;
+                background-color: #FFF;
+                box-sizing: border-box;
+                }
+
+                .tabs nav {
+                height: 40px;
+                text-align: center;
+                line-height: 40px;
+                background-color: #A0A0A0;
+                display: flex;
+                }
+
+                nav a {
+                display: block;
+                width: 200px;
+                border-right: 1px solid #A0A0A0;
+                color: #000;
+                text-decoration: none;
+                }
+
+                nav a:last-child {
+                border-right: 0 none;
+                }
+
+                nav a.active {
+                background-color: #808080;
+				}
+
+				.cont {
+                overflow: hidden;
+                display: none;
+                }
+
+                .cont ol {
+                line-height: 30px;
+                }
+
+		</style>
+
+</head>
+<body>
+
+    <form action="/voteUser" method="post">
+        <div class ="header"><h1>HistoryPage</h1>
+			<h4>This a demostration of voting system based on fabric</h4>
+		</div>
+		<div class="tabs">
+			<section class="cont" id="local" >
+				<ol>
+					<div>
+						<canvas id="barChart0" height="400" width="600" style="margin:20px"> 你的浏览器不支持HTML5 canvas </canvas>
+					</div>
+					
+				</ol>
+			</section>
+			<section class="cont" id="global">
+				<ol>
+					<div>
+						<canvas id="barChart1" height="400" width="600" style="margin:20px"> 你的浏览器不支持HTML5 canvas </canvas>
+					</div>
+				</ol>
+			</section>
+			<nav>
+				<a href="javascript:;" data-cont="local">Block length</a>
+				<a href="javascript:;" data-cont="global">Block each day</a>
+			</nav>
+		</div>
+		
+		<div>
+		<% 
+                    jsonResult = JSON.parse(result)
+                    height = jsonResult.height.low + jsonResult.height.high
+                %>
+			<h4>Block height:<%= height %></h4>
+			<table class="table">
+				<thead>
+					<th>TxID</th>           
+					<th>Block</th>           
+					<th>TimeStamp</th>        
+				</thead>
+				<tbody id="tbMain">                
+				</tbody>
+			</table>
+		</div>
+		
+		<div class = "btnPanel">
+                <button type="button" onclick="goBack()">Back</button>
+        </div>
+    </form>
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        window.onload = function()
+		{       
+						var navs=document.querySelectorAll('nav a');
+						for(var i=0;i<navs.length;i++){
+							if(i==1){
+								navs[i].classList.add('active');
+								var secId=navs[i].dataset['cont'];
+								document.querySelector('#'+secId).style.display='block';							}
+							navs[i].onclick=function(){
+								var  currentNav=document.querySelector('.active');
+								var currentId=currentNav.dataset['cont'];
+								currentNav.classList.remove('active');
+								document.querySelector('#'+currentId).style.display='none';
+								this.classList.add('active');
+								var myId=this.dataset['cont'];
+								document.querySelector('#'+myId).style.display='block';
+							}
+						}
+						
+                        var height = <%= height %>
+                        var tbody = document.getElementById('tbMain');
+						var d = new Date();
+                       				var d1 = new Date(d.getTime() - 1*24*60*60*1000);
+						var d2 = new Date(d.getTime() - 2*24*60*60*1000); 
+						var d3 = new Date(d.getTime() - 3*24*60*60*1000); 
+						var d4 = new Date(d.getTime() - 4*24*60*60*1000); 
+						var d5 = new Date(d.getTime() - 5*24*60*60*1000); 
+						var d6 = new Date(d.getTime() - 6*24*60*60*1000); 
+
+						if(height > 8){
+							var dataArr0 = [[height-1,1],[height-2,1],[height-3,1],[height-4,1],[height-5,1],[height-6,1],[height-7,1],[height-8,1]];
+						}
+						else{
+							var dataArr0 = new Array();
+							for(var j = 0 ;j < height ; j++){
+								dataArr0[j] = [height - 1 - j,0];
+							}
+						}
+						var dataArr1 = [["19/"+(d6.getMonth()+1)+"/"+d6.getDate(),0],["19/"+(d5.getMonth()+1)+"/"+d5.getDate(),0],["19/"+(d4.getMonth()+1)+"/"+d4.getDate(),0],["19/"+(d3.getMonth()+1)+"/"+d3.getDate(),0],["19/"+(d2.getMonth()+1)+"/"+d2.getDate(),0],["19/"+(d1.getMonth()+1)+"/"+d1.getDate(),0],["19/"+(d.getMonth()+1)+"/"+d.getDate(),0]];
+						
+                        for(var i = height - 1;i >= 2 ; i--){   
+                                $.get ("/queryBlockById?blockId="+i,function(data){
+                                        var block = JSON.parse(data);
+                                        for(var j = 0 ;j < block.data.data.length ; j++)
+                                                var trow = getDataRow(block,j);             
+                                                tbody.appendChild(trow);
+					if(height - 1 - i < 8){
+						dataArr0[height - 1 - i][1] = block.data.data.length;
+					}
+					if(d.getDate() - parseInt(block.data.data[0].payload.header.channel_header.timestamp.slice(8,10)) < 7){
+					dataArr1[6 + parseInt(block.data.data[0].payload.header.channel_header.timestamp.slice(8,10)) - d.getDate() ][1] += 1;
+					}
+							})
+                                     
+                        }
+						
+						
+						goBarChart("barChart0",dataArr0);
+						goBarChart("barChart1",dataArr1);	
+        }
+		function goBarChart(chartId,dataArr){
+            var canvas,ctx;
+            var cWidth, cHeight, cMargin, cSpace;
+            var originX, originY;
+            var bMargin, tobalBars, bWidth, maxValue;
+            var totalYNomber;
+            var gradient;
+
+            var ctr, numctr, speed;
+            var mousePosition = {};
+			var xL = "Block height";
+			var yL = "Length";
+			
+			if(chartId == "barChart0"){
+				var xL = "Block height";
+				var yL = "Length";
+			}
+			
+			if(chartId == "barChart1"){
+				var xL = "Day";
+				var yL = "Amount";
+			}			
+
+            canvas = document.getElementById(chartId);
+            if(canvas && canvas.getContext){
+                ctx = canvas.getContext("2d");
+            }
+			initChart();
+
+            function initChart(){
+                cMargin = 20;
+                cSpace = 40;
+                cHeight = canvas.height - cMargin*2 - cSpace;
+                cWidth = canvas.width - cMargin*2 - cSpace;
+                originX = cMargin + cSpace;
+                originY = cMargin + cHeight;
+                bMargin = 15;
+                tobalBars = dataArr.length;
+                bWidth = parseInt( cWidth/tobalBars - bMargin );
+                maxValue = 0;
+                for(var i=0; i<dataArr.length; i++){
+                    var barVal = parseInt( dataArr[i][1] );
+                    if( barVal > maxValue ){
+                        maxValue = barVal;
+                    }
+                }
+                maxValue += 5;
+                totalYNomber = 5;
+                ctr = 1;
+                numctr = 100;
+                speed = 10;
+                gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(50,50,50,1)');
+                gradient.addColorStop(1, 'rgba(200,200,200,1)');
+
+            }
+			drawLineLabelMarkers(xL,yL); 
+            function drawLineLabelMarkers(xLine,yLine){
+                ctx.translate(0.5,0.5);  
+                ctx.font = "12px Arial";
+                ctx.lineWidth = 1;
+                ctx.fillStyle = "#000";
+                ctx.strokeStyle = "#000";
+                drawLine(originX, originY, originX, cMargin);
+                drawLine(originX, originY, originX+cWidth, originY);
+
+                drawMarkers(xLine,yLine);
+                ctx.translate(-0.5,-0.5);
+            }
+            
+            function drawLine(x, y, X, Y){
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(X, Y);
+                ctx.stroke();
+                ctx.closePath();
+            }
+			
+            function drawMarkers(xLine,yLine){
+                ctx.strokeStyle = "#E0E0E0";
+                var oneVal = parseInt(maxValue/totalYNomber);
+                ctx.textAlign = "right";
+                for(var i=0; i<=totalYNomber; i++){
+                    var markerVal =  i*oneVal;
+                    var xMarker = originX-5;
+                    var yMarker = parseInt( cHeight*(1-markerVal/maxValue) ) + cMargin;
+                    ctx.fillText(markerVal, xMarker, yMarker+3, cSpace);
+                    if(i>0){
+                        drawLine(originX, yMarker, originX+cWidth, yMarker);
+                    }
+                }
+                ctx.textAlign = "center";
+                for(var i=0; i<tobalBars; i++){
+                    var markerVal = dataArr[i][0];
+                    var xMarker = parseInt( originX+cWidth*(i/tobalBars)+bMargin+bWidth/2 );
+                    var yMarker = originY+15;
+                    ctx.fillText(markerVal, xMarker, yMarker, cSpace); 
+                }
+                ctx.save();
+                ctx.rotate(-Math.PI/2);
+                ctx.fillText(yLine, -canvas.height/2, cSpace-10);
+                ctx.restore();
+                ctx.fillText(xLine, originX+cWidth/2, originY+cSpace/2+10);
+            };
+			drawBarAnimate(); 
+            function drawBarAnimate(mouseMove){
+                for(var i=0; i<tobalBars; i++){
+                    var oneVal = parseInt(maxValue/totalYNomber);
+                    var barVal = dataArr[i][1];
+                    var barH = parseInt( cHeight*barVal/maxValue * ctr/numctr );
+                    var y = originY - barH;
+                    var x = originX + (bWidth+bMargin)*i + bMargin;
+                    drawRect( x, y, bWidth, barH, mouseMove );  
+                    ctx.fillText(parseInt(barVal*ctr/numctr), x+15, y-8); 
+                }
+                if(ctr<numctr){
+                    ctr++;
+                    setTimeout(function(){
+                        ctx.clearRect(0,0,canvas.width, canvas.height);
+						drawLineLabelMarkers(xL,yL); 
+                        drawBarAnimate();
+                    }, speed);
+                }
+            }
+            function drawRect( x, y, X, Y, mouseMove ){
+
+                ctx.beginPath();
+                ctx.rect( x, y, X, Y );
+                if(mouseMove && ctx.isPointInPath(mousePosition.x, mousePosition.y)){
+                    ctx.fillStyle = "green";
+                }else{
+                    ctx.fillStyle = gradient;
+                    ctx.strokeStyle = gradient;
+                }
+                ctx.fill();
+                ctx.closePath();
+            }
+		}
+		
+        function getDataRow(block,i){       
+                        var row = document.createElement('tr');              
+                        var idCell = document.createElement('td');        
+                        idCell.innerHTML = "<a href=\"\\txInfoPage?TxId=" + block.data.data[i].payload.header.channel_header.tx_id + "\">" + block.data.data[i].payload.header.channel_header.tx_id + "</a>";      
+                        row.appendChild(idCell);               
+                        var blockCell = document.createElement('td');    
+                        blockCell.innerHTML = "<a href=\"\\blockInfoPage?blockId=" + block.header.number +"\">" + block.header.number + "</a>";
+                        row.appendChild(blockCell);              
+                        var tsCell = document.createElement('td');       
+                        tsCell.innerHTML = block.data.data[i].payload.header.channel_header.timestamp.slice(0,10) + " " + block.data.data[i].payload.header.channel_header.timestamp.slice(11,19);       
+                        row.appendChild(tsCell); 
+                        return row;
+        }
+				
+		function goBack () {
+
+            window.location.href = "/"
+
+        }
+    </script>
+</body>
+
+</html>
+
